@@ -1,0 +1,609 @@
+﻿@model ProductListModel
+@section Styles
+{
+    <!-- Include DataTables Styles -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <style>
+        /* Custom styles for the card and table */
+        .custom-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 5px; /* Reduced from 20px to 5px */
+        }
+
+        /* Optionally, reduce any padding for surrounding elements (if needed) */
+        .custom-card-header {
+            padding: 0.5rem; /* Reduced padding for the header */
+        }
+
+        .card-body {
+            padding-top: 10px; /* Reduce the padding in the card body if needed */
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            float: right;
+            margin-bottom: 1rem;
+        }
+
+        .dataTables_wrapper .dataTables_length {
+            float: left;
+            margin-bottom: 1rem;
+        }
+
+        #Products thead th {
+            background-color: #17a2b8; /* Teal color */
+            color: white; /* Text color white */
+            border: none; /* Remove borders between header cells */
+            position: relative; /* Required for arrow positioning */
+        }
+
+        table.dataTable thead {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+
+            table.dataTable thead th {
+                padding: 6px 8px;
+            }
+
+        /* Reduce padding for table body cells to reduce row height and width */
+        table.dataTable tbody td {
+            padding: 2px 5px; /* Less padding for both height and width reduction */
+        }
+
+        /* Ensure rows are smaller */
+        table.dataTable tbody tr {
+            min-height: 24px; /* Reduce row height */
+            height: 24px;
+        }
+
+        /* Compact table layout */
+        table.dataTable {
+            width: 100%; /* Keep the full width of the table */
+            table-layout: auto; /* Automatically adjust width */
+        }
+
+
+        /* Style for table hover images */
+        .table-hover img {
+            transition: transform 0.3s ease-in-out;
+            margin: 5px;
+        }
+
+            .table-hover img:hover {
+                transform: scale(3);
+                z-index: 10;
+                position: relative;
+            }
+
+        /* Compact pagination controls */
+        .dataTables_wrapper .dataTables_paginate {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Center the "show entries" dropdown */
+        .dataTables_wrapper .dataTables_length {
+            float: right;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Adjust the "info" text position */
+        .dataTables_wrapper .dataTables_info {
+            float: left;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Sorting icon customization */
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting:after {
+            font-family: "FontAwesome";
+            content: "▲ ▼";
+            font-size: 0.6rem;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white; /* Set arrows to white */
+        }
+
+        table.dataTable thead .sorting_asc:before {
+            content: "▲"; /* Ascending sort */
+        }
+
+        table.dataTable thead .sorting_desc:before {
+            content: "▼"; /* Descending sort */
+        }
+
+        /* Hide default sorting icons */
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_desc:after {
+            display: none !important;
+        }
+
+        /* Bulk Delete and Add Product button styles */
+        #bulk-delete-btn {
+            background-color: #17a2b8; /* Button color */
+            color: white;
+            padding: 0.3rem 1rem; /* Adjusted padding */
+            border-radius: 5px; /* Square shape with slight rounding */
+        }
+
+        .btn-add-product {
+            background-color: #17a2b8; /* Button color */
+            color: white;
+            padding: 0.3rem 1rem; /* Adjusted padding */
+            border-radius: 5px; /* Square shape with slight rounding */
+            margin-right: 10px;
+        }
+
+
+            .btn-add-product:hover, #bulk-delete-btn:hover {
+                background-color: #138496; /* Darker shade on hover */
+            }
+
+
+        .action-dropdown button {
+            background-color: #17a2b8; /* Button background color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            box-shadow: none;
+            -webkit-appearance: none; /* Remove default button appearance (Safari/Chrome) */
+            -moz-appearance: none; /* Remove default button appearance (Firefox) */
+            appearance: none; /* Remove default button appearance */
+        }
+
+            .action-dropdown button:hover {
+                background-color: #138496; /* Darker shade on hover */
+            }
+
+            .action-dropdown button:focus,
+            .action-dropdown button:focus-visible,
+            .action-dropdown button:active {
+                outline: none; /* Remove blue focus outline */
+                background-color: #138496; /* Keep background color consistent */
+                box-shadow: none; /* Remove any default shadow */
+                border-color: #138496; /* Ensure no blue border on active state */
+                color: white;
+                transition: none; /* Disable transition to prevent blue flash */
+            }
+
+                .action-dropdown button:focus:not(:focus-visible) {
+                    outline: none; /* Remove focus outline in specific cases */
+                }
+
+            /* Disable focus and active state blue color in WebKit (Chrome, Safari) */
+            .action-dropdown button::-moz-focus-inner {
+                border: 0; /* Remove inner focus border on Firefox */
+            }
+
+            .action-dropdown button:focus-visible {
+                outline: none; /* Prevent blue focus ring */
+            }
+
+        .active-button {
+            background-color: navy; /* Navy blue color */
+            color: white; /* White text color for contrast */
+            border-color: navy; /* Navy blue border to match */
+        }
+
+       
+
+      
+        
+    </style>
+}
+<!-- Redesign the card for product index -->
+<div class="card custom-card">
+   
+      
+        <!-- /.card-header -->
+      
+    
+
+    <div class="card-header custom-card-header">
+        <partial name="_ToasterNotification" />
+        <partial name="_DeleteModalPartial" />
+        <h3 class="card-title">Item List</h3>
+        <div class="card-tools">
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-add-product">
+                 Back to Item list
+            </a>
+        </div>
+    </div>
+ 
+   
+     <!-- /.card-header -->
+     <div class="card-body">
+        <div class="row d-flex gap-2">
+            <div class="col-auto">
+                <div class="form-group">
+                    <button id="btnAll" class="btn btn-outline-secondary">All</button>
+                </div>
+            </div>
+
+            <div class="col-auto">
+                <div class="form-group">
+                    <button id="btnBelowMinStock" type="button" class="btn btn-outline-secondary">Below Minimum Stock</button>
+                </div>
+            </div> 
+            <div class="col-auto">
+                <div class="form-group">
+                    <button id="btnActive" type="button" class="btn btn-outline-secondary">Active</button>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group">
+                    <button id="btnInactive" type="button" class="btn btn-outline-secondary">Inactive</button>
+                </div>
+            </div>
+        </div>
+
+
+
+         <div class="row">
+             <div class="col-sm-3">
+                 <div class="form-group">
+                     
+                     <input type="text" asp-for="SearchItem.ItemName" class="form-control" placeholder="Item Name"/>
+                 </div>
+             </div>
+            
+             <div class="col-sm-3">
+                 <div class="form-group">
+
+                    <input type="text" asp-for="SearchItem.Barcode" class="form-control" placeholder="Barcode" />
+                 </div>
+             </div>
+             <div class="col-sm-6">
+                 <div class="form-group">
+
+                    <select asp-for="SearchItem.CategoryId" asp-items="Model.Categories" class="form-control"></select>
+                 </div>
+             </div>
+           
+         </div>
+         <div class="row">
+
+            
+          
+             <div class="col-sm-2">
+                 <div class="form-group">
+
+                    <input type="text" asp-for="SearchItem.MinTotalStock" class="form-control" placeholder="MinimumStock"  />
+                 </div>
+             </div>
+             <div class="col-sm-2">
+                 <div class="form-group">
+
+                    <input type="text" asp-for="SearchItem.MaxTotalStock" class="form-control" placeholder="MaximumStock" />
+                 </div>
+             </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                   
+                    <select asp-for="SearchItem.TaxesId" asp-items="Model.Taxes" class="form-control"></select>
+                </div>
+            </div>
+
+         </div>
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    
+                    <input type="hidden" asp-for="SearchItem.Status" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+
+                    <input type="hidden" asp-for="SearchItem.BelowMinStock" class="form-control" />
+                </div>
+            </div>
+
+
+
+        </div> 
+      
+        
+      
+
+       
+     </div>
+    
+  
+   
+
+   
+
+    <!-- Table Body -->
+    <div class="card-body">
+       
+
+        <table id="Products" class="table table-striped table-bordered table-hover" style="width:100%">
+            <thead>
+                <tr>
+                   
+                    <th>Image</th>
+                    <th>Item Name</th>
+                    <th>Barcode</th>
+                    <th>Category</th>
+
+                    <th>Taxes</th>
+                    <th>In Stock</th>
+
+                    <th>Status</th>
+                    <th>Minimum Stock</th>
+
+                    
+                 
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+
+
+</div>
+<!-- Card for Product Index -->
+@section Scripts
+{
+    <!-- Include DataTables Scripts -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        $(function () {
+            
+            $("#Products").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50],
+                    [10, 25, 50]
+                ],
+                ajax: {
+                    url: "/Admin/Product/GetProductJsonDataSP",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                       
+                        d.SearchItem = {
+                            ItemName: $("#SearchItem_ItemName").val(),
+                            CategoryId: $("#SearchItem_CategoryId").val(),
+                            Barcode: $("#SearchItem_Barcode").val(),
+                            MinTotalStock: $("#SearchItem_MinTotalStock").val(),
+                            MaxTotalStock: $("#SearchItem_MaxTotalStock").val(),
+                            Status: $("#SearchItem_Status").val(),
+                            TaxesId: $("#SearchItem_TaxesId").val(),
+                            BelowMinStock: $("#SearchItem_BelowMinStock").val()
+
+
+
+                            
+                        };
+                        return JSON.stringify(d);
+                    },
+
+                },
+                order: [[1]],
+                columnDefs: [
+                   
+                   
+
+
+                    {
+                        targets: 0,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            console.log('Image path:', data); // Debug log
+                            // `data` should be the relative image path like /images/prod-4.jpg
+                            if (data) {
+                                return `<img src="${data}" alt="Product Image" width="50" height="50"/>`;
+                            }
+                            return `<span>No Image</span>`;
+                        }
+                    },
+                    {
+                        targets: 7, // Assuming InStock is at index 9
+                        visible: false // Hide the InStock column
+                    },
+                   
+                ],
+
+                "rowCallback": function (row, data) {
+                    // Assuming TotalStock is at index 5 and InStock is at index 7
+                    var totalStock = parseInt(data[5], 10); // Adjust the index as needed
+                    var inStock = parseInt(data[7], 10); // Adjust the index as needed
+
+                    // Check if TotalStock is greater than InStock
+                    if (totalStock < inStock) {
+                        $(row).css("color", "red"); // Color the row red
+                    } else {
+                        $(row).css("color", ""); // Reset color if condition not met
+                    }
+                },
+             
+
+
+
+
+
+                dom: '<"row"<"col-sm-12">><"row"<"col-sm-12"tr>><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"lp>>',
+
+
+
+            });
+
+          
+
+
+           
+
+            $('#Products').on('click', '.show-bs-modal', function () {
+                let id = $(this).data("id");
+                let modal = $("#modal-default");
+                modal.find('.modal-body p').text('Are you sure you want to delete this product?');
+                $("#deleteId").val(id);
+                $("#deleteForm").attr("action", "/admin/product/delete");
+                modal.modal('show');
+            });
+
+            $("#deleteButton").click(function () {
+                $("#deleteForm").submit();
+            });
+
+
+            $(document).ready(function () {
+                // Active button: sets the Status to 1 and clears other filters
+                $('#btnActive').on('click', function () {
+                    $("#SearchItem_Status").val(1); // Set Status to Active (1)
+                    $("#SearchItem_BelowMinStock").val(''); // Clear BelowMinStock filter
+                    $('#Products').DataTable().ajax.reload(null, false); // Reload DataTable
+                });
+
+                // Inactive button: sets the Status to 0 and clears other filters
+                $('#btnInactive').on('click', function () {
+                    $("#SearchItem_Status").val(0); // Set Status to Inactive (0)
+                    $("#SearchItem_BelowMinStock").val(''); // Clear BelowMinStock filter
+                    $('#Products').DataTable().ajax.reload(null, false); // Reload DataTable
+                });
+
+                // Below Minimum Stock button: sets the BelowMinStock filter and clears Status filter
+                $('#btnBelowMinStock').on('click', function () {
+                    $("#SearchItem_BelowMinStock").val(1); // Set BelowMinStock filter to active
+                    $("#SearchItem_Status").val(''); // Clear Status filter
+                    $('#Products').DataTable().ajax.reload(null, false); // Reload DataTable
+                });
+
+                // Reset filters when other (non-filter) buttons are clicked
+                $('button').not('#btnActive, #btnInactive, #btnBelowMinStock').on('click', function () {
+                    $("#SearchItem_Status").val(''); // Clear Status filter
+                    $("#SearchItem_BelowMinStock").val(''); // Clear BelowMinStock filter
+                    $('#Products').DataTable().ajax.reload(null, false); // Reload DataTable if needed
+                });
+            });
+
+           
+          
+
+
+          
+
+
+        });
+    </script> 
+
+    <script>
+        $(document).ready(function () {
+            // Reload DataTable whenever Item Name input changes
+            $('input[name="SearchItem.ItemName"]').on('input', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+
+            // Reload DataTable whenever Barcode input changes
+            $('input[name="SearchItem.Barcode"]').on('input', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+
+            // Reload DataTable whenever Category selection changes
+            $('select[name="SearchItem.CategoryId"]').on('change', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+        });
+
+        $(document).ready(function () {
+            // Reload DataTable on MinTotalStock input change
+            $('input[name="SearchItem.MinTotalStock"]').on('input', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+
+            // Reload DataTable on MaxTotalStock input change
+            $('input[name="SearchItem.MaxTotalStock"]').on('input', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+
+            $('input[name="SearchItem.MaxTotalStock"]').on('input', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+
+            $('select[name="SearchItem.TaxesId"]').on('change', function () {
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+
+            // Reload DataTable with all data on button click
+            $('#btnAll').on('click', function () {
+                // Clear any search filters
+                $("input[name='SearchItem.ItemName']").val('');
+                $("input[name='SearchItem.Barcode']").val('');
+                $("select[name='SearchItem.CategoryId']").val('');
+                $("input[name='SearchItem.MinTotalStock']").val('');
+                $("input[name='SearchItem.MaxTotalStock']").val('');
+
+                // Clear the status filter
+                $("#SearchItem_Status").val(''); // Assuming this is the input for status
+
+                // Clear the TaxesId filter
+                $("select[name='SearchItem.TaxesId']").val(''); // Clear TaxesId
+
+                $("select[name='SearchItem.BelowMinStock']").val('');
+
+             
+
+                // Reload the DataTable
+                $('#Products').DataTable().ajax.reload(null, false);
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.form-group button').on('click', function () {
+                // Remove active class from all buttons
+                $('.form-group button').removeClass('active-button');
+
+                // Add active class to the clicked button
+                $(this).addClass('active-button');
+
+                // Your existing logic for handling button clicks
+                if (this.id === 'btnAll') {
+                    // Load all products
+                } else if (this.id === 'btnActive') {
+                    // Load active products
+                } else if (this.id === 'btnInactive') {
+                    // Load inactive products
+                }
+            });
+        });
+
+    </script>
+
+ 
+
+
+}
+
+

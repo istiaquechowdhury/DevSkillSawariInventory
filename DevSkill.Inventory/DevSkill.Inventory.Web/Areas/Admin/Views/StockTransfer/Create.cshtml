@@ -1,0 +1,405 @@
+﻿@section Styles
+ {
+    <style>
+        body {
+            background-color: white;
+        }
+
+        section.content {
+            padding-top: 20px;
+            margin-top: -30px;
+        }
+
+        .form-control-underline {
+            border: none;
+            border-bottom: 1px solid #000;
+            border-radius: 0;
+            outline: none;
+            padding: 10px 0;
+            width: 100%;
+            background-color: transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .form-control-underline:focus {
+                border-bottom: 2px solid #007bff;
+            }
+
+        .barcode-input-group {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+            .barcode-input-group input {
+                flex-grow: 1;
+                padding-right: 50px;
+            }
+
+        .barcode-image {
+            width: 30px;
+            height: auto;
+            margin-left: -30px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+
+        h5.text-center {
+            margin-top: 0;
+            margin-bottom: 0;
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+        hr.border-top {
+            border-top: 1px solid black;
+            width: 100%;
+        }
+
+        .custom-line-input {
+            border: none; /* Remove the border */
+            border-bottom: 2px solid #000; /* Add only the bottom border */
+            background-color: transparent; /* Make the background transparent */
+            width: 100%; /* Make the input take full width */
+            padding: 5px 0; /* Adjust padding */
+            outline: none; /* Remove the focus outline */
+        }
+
+            .custom-line-input:focus {
+                border-bottom: 2px solid #007bff; /* Change border color on focus */
+            }
+
+        .form-control-underline {
+            border: none;
+            border-bottom: 1px solid #000;
+            border-radius: 0;
+            outline: none;
+            padding: 10px 0;
+            width: 100%;
+            background-color: transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .form-control-underline:focus {
+                border-bottom: 2px solid #007bff;
+            }
+
+        .barcode-input-group {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+            .barcode-input-group input {
+                flex-grow: 1;
+                padding-right: 50px;
+            }
+
+        .barcode-image {
+            width: 30px;
+            height: auto;
+            margin-left: -30px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+
+        h5.text-center {
+            margin-top: 0;
+            margin-bottom: 0;
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+        hr.border-top {
+            border-top: 1px solid black;
+            width: 100%;
+        }
+
+
+        .quantity-display {
+            background-color: white !important; /* Force background to be white */
+            color: black !important; /* Ensure the text is visible */
+            border: none !important; /* Remove any borders */
+            box-shadow: none !important; /* Remove shadows */
+            padding: 0;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+            .quantity-display:focus {
+                outline: none !important;
+            }
+
+        .quantity-display {
+            border: 1px solid transparent !important;
+        }
+
+        .line-input {
+            border: none; /* Remove all default borders */
+            border-bottom: 1px solid #000; /* Add only a bottom border for the line */
+            border-radius: 0; /* No border radius */
+            padding-left: 0; /* Keep text aligned to the left */
+            box-shadow: none; /* Remove shadow */
+        }
+
+            .line-input:focus {
+                outline: none; /* Remove focus outline */
+                border: none; /* Ensure no border shows */
+                border-bottom: 1px solid #000; /* Only keep the bottom border */
+                box-shadow: none; /* Ensure no box shadow appears */
+            }
+
+    </style>
+ }
+
+
+@model StockTransferModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<section class="content py-3" style="background-color: #ffffff;">
+    <partial name="_ToasterNotification" />
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <h5 class="text-center mb-2">Transfer Entry</h5>
+                <hr class="border-top border-dark mb-4">
+
+                <form asp-area="Admin" asp-controller="StockTransfer" asp-action="Create" asp-antiforgery="true" form-method="Post">
+
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <input type="date" asp-for="Date" class="form-control-underline" placeholder="Transfer Date*">
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label asp-for="WareHouseId" class="mr-2"></label>
+                            <select asp-for="WareHouseId" asp-items="Model.WareHouses" class="form-control-underline">
+                                <option value="" hidden>Select Source Warehouse</option>
+                            </select>
+                            <span asp-validation-for="WareHouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label asp-for="DestinationWareHouseId" class="mr-2"></label>
+                            <select asp-for="DestinationWareHouseId" asp-items="Model.WareHouses" class="form-control-underline">
+                                <option value="" hidden>Select Destination Warehouse</option>
+                            </select>
+                            <span asp-validation-for="DestinationWareHouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                       
+                    
+                    <div class="card card-primary mb-4">
+                        <div class="card-header" style="background-color:#17a2b8;padding: 5px 10px;">
+                            <div class="row">
+                                <div class="col-md-6" style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">Item</h3>
+                                </div>
+                                <div class="col-md-3" style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">Available stock in hand</h3>
+                                </div>
+                                <div class="col-md-3" style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">Transferred Quantity </h3>
+                                </div>
+                              
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Product Search Section -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label for="ProductSearch" class="font-weight-bold"></label>
+                                    <input type="text" id="ProductSearch" class="form-control border shadow-sm" placeholder="Search Item">
+                                    <input type="hidden" id="ProductId" name="ProductId" />
+                                    <div id="productList" class="border mt-1 rounded"></div>
+                                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                                </div>
+
+                                <!-- Available Stock -->
+
+
+                                <div class="col-md-3">
+                                    <label for="QuantityDisplay" class="font-weight-bold"></label>
+                                    <input type="number" id="QuantityDisplay" class="form-control quantity-display" readonly>
+                                </div>
+
+
+
+                                <div class="col-md-3">
+                                    <label for="TransferredQuantity" class="font-weight-bold"></label>
+                                    <input type="number" asp-for="TransferredQuantity" id="TransferredQuantity" class="form-control quantity-display">
+                                    <small id="quantityWarning" class="text-danger d-none">Quantity is not available</small>
+
+                                </div>
+
+
+
+
+
+
+                                <!-- New Stock in Hand -->
+                              
+
+
+                            </div>
+
+
+
+                          
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <input type="text" asp-for="Note" class="form-control-underline" placeholder="Notes">
+                            <span asp-validation-for="Note" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Barcode generation section -->
+                   
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-sm mr-2 px-3" id="saveButton">Save</button>
+                            <button type="button" class="btn btn-danger btn-sm px-3" onclick="window.location.href='/Admin/StockTransfer'">Cancel</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="redirectToNew" name="redirectToNew" value="false" />
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#saveButton').click(function () {
+                $('#redirectToNew').val('false'); // Set the hidden field to false for regular Save
+            });
+
+
+        });
+    </script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            // Product Search functionality
+            $('#ProductSearch').on('input', function () {
+                let searchQuery = $(this).val();
+
+                if (searchQuery.length > 0) {
+                    $.ajax({
+                        url: '@Url.Action("Search", "StockAdjustment")',
+                        type: 'GET',
+                        data: { search: searchQuery },
+                        success: function (data) {
+                            let productList = $('#productList');
+                            productList.empty();
+
+                            if (data.length > 0) {
+                                $.each(data, function (i, product) {
+                                    productList.append('<div class="product-item p-2 border-bottom" data-id="' + product.id + '">' + product.itemName + '</div>');
+                                });
+                            } else {
+                                productList.append('<div class="p-2 text-muted">No products found</div>');
+                            }
+                        }
+                    });
+                } else {
+                    $('#productList').empty();
+                }
+            });
+
+            // Select product from the search results and load available stock
+            $(document).on('click', '.product-item', function () {
+                let productId = $(this).data('id');
+                let productName = $(this).text();
+                $('#ProductId').val(productId);
+                $('#ProductSearch').val(productName);
+                $('#productList').empty();
+
+                // Get available stock for the selected product
+                $.ajax({
+                    url: '@Url.Action("GetInStock", "StockAdjustment")',
+                    type: 'GET',
+                    data: { productId: productId },
+                    success: function (inStock) {
+                        $('#QuantityDisplay').val(inStock);
+                        $('#NewStockInHand').val(''); // Clear New Stock in Hand
+                        $('#AdjustedQuantity').val(''); // Clear Adjusted Quantity
+                        $('#adjustedSymbol').text(''); // Clear symbol
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+
+
+    <script>
+       
+            document.getElementById('TransferredQuantity').addEventListener('input', function () {
+                const transferredQuantity = parseFloat(this.value);
+                const availableQuantity = parseFloat(document.getElementById('QuantityDisplay').value);
+                const warningMessage = document.getElementById('quantityWarning');
+
+                if (!isNaN(transferredQuantity) && !isNaN(availableQuantity)) {
+                    if (transferredQuantity > availableQuantity) {
+                        warningMessage.classList.remove('d-none');
+                    } else {
+                        warningMessage.classList.add('d-none');
+                    }
+                } else {
+                    warningMessage.classList.add('d-none');
+                }
+            });
+    </script>
+    
+
+
+}

@@ -1,0 +1,551 @@
+﻿@model StockAdjustmentModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: white;
+        }
+
+        section.content {
+            padding-top: 20px;
+            margin-top: -30px;
+        }
+
+        .form-control-underline {
+            border: none;
+            border-bottom: 1px solid #000;
+            border-radius: 0;
+            outline: none;
+            padding: 10px 0;
+            width: 100%;
+            background-color: transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .form-control-underline:focus {
+                border-bottom: 2px solid #007bff;
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+
+        h2.text-center {
+            margin-top: 0;
+            margin-bottom: 0;
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+        hr.border-top {
+            border-top: 1px solid black;
+            width: 100%;
+        }
+
+        .card {
+            width: 100%; /* Ensure card is full width */
+        }
+
+        .container-fluid {
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+        }
+
+        .line-input {
+            border: none; /* Remove default border */
+            border-bottom: 2px solid #000; /* Add bottom border */
+            outline: none; /* Remove outline */
+            padding: 5px 0; /* Adjust padding */
+            width: 100%; /* Full width */
+            background-color: transparent; /* Transparent background */
+        }
+
+            .line-input:focus {
+                border-bottom: 2px solid #007bff; /* Change color on focus */
+            }
+
+            .line-input::placeholder {
+                color: transparent; /* Make placeholder text invisible */
+            }
+
+            .line-input:-ms-input-placeholder { /* For Internet Explorer */
+                color: transparent;
+            }
+
+            .line-input::-ms-input-placeholder { /* For Microsoft Edge */
+                color: transparent;
+            }
+
+        
+
+        .symbol-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            font-weight: bold;
+            background-color: #f8f9fa;
+            color: #333;
+            cursor: default;
+        }
+
+            .symbol-button.positive {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .symbol-button.negative {
+                background-color: #dc3545;
+                color: white;
+            }
+
+        /* Main Toggle Switch Container */
+        .enhanced-toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        /* Hide Checkbox */
+        .enhanced-toggle-checkbox {
+            display: none;
+        }
+
+        /* Toggle Label as Switch Background */
+          .enhanced-toggle-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #007bff;  /* Initial blue color */
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 0 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          }
+       
+
+        /* Toggle Symbols for Plus and Minus */
+        .toggle-symbol {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Initial Plus Symbol */
+         .plus-symbol {
+            opacity: 1;
+         }
+
+        /* Indicator Circle */
+        .toggle-indicator {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Checkbox: Toggle Style when Checked */
+        .enhanced-toggle-checkbox:checked + .enhanced-toggle-label {
+             background-color: #ff4b4b; /* Red for minus */
+        } 
+
+            /* Move Indicator and Update Symbols */
+            .enhanced-toggle-checkbox:checked + .enhanced-toggle-label .toggle-indicator {
+                transform: translateX(30px);
+            }
+
+             .enhanced-toggle-checkbox:checked + .enhanced-toggle-label .plus-symbol {
+                opacity: 0;
+            }
+
+            .enhanced-toggle-checkbox:checked + .enhanced-toggle-label .minus-symbol {
+                opacity: 1;
+            }
+
+        .quantity-display {
+            background-color: white !important; /* Force background to be white */
+            color: black !important; /* Ensure the text is visible */
+            border: none !important; /* Remove any borders */
+            box-shadow: none !important; /* Remove shadows */
+            padding: 0;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+            .quantity-display:focus {
+                outline: none !important;
+            }
+
+        .quantity-display {
+            border: 1px solid transparent !important;
+        }
+
+        .line-input {
+            border: none; /* Remove all default borders */
+            border-bottom: 1px solid #000; /* Add only a bottom border for the line */
+            border-radius: 0; /* No border radius */
+            padding-left: 0; /* Keep text aligned to the left */
+            box-shadow: none; /* Remove shadow */
+        }
+
+            .line-input:focus {
+                outline: none; /* Remove focus outline */
+                border: none; /* Ensure no border shows */
+                border-bottom: 1px solid #000; /* Only keep the bottom border */
+                box-shadow: none; /* Ensure no box shadow appears */
+            }
+
+              
+        
+    </style>
+}
+
+<!-- Main content -->
+<section class="content py-3" style="background-color: #ffffff;">
+    <partial name="_ReasonModal" />
+    <div class="container-fluid">
+      
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <h2 class="text-center mb-2">Create New StockAdjustment</h2>
+                <hr class="border-top border-dark mb-4">
+
+                <form asp-area="Admin" asp-controller="StockAdjustment" asp-action="Create" asp-antiforgery="true" method="post">
+
+                    <!-- First Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label asp-for="dateOnly" class="mr-2"></label>
+                            <input type="date" asp-for="dateOnly" class="form-control-underline" placeholder="">
+                            <span asp-validation-for="dateOnly" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label asp-for="ReasonId" class="mr-2"></label>
+                            <select asp-for="ReasonId" asp-items="Model.Reasons" class="form-control-underline">
+                                <option value="" hidden>Select Reason</option>
+                            </select>
+                            <span asp-validation-for="ReasonId" class="text-danger"></span>
+                            <button type="button" class="btn btn-primary btn-sm ml-3" id="addReasonButton">Add</button>
+
+
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label asp-for="WareHouseId" class="mr-2"></label>
+                            <select asp-for="WareHouseId" asp-items="Model.WareHouses" class="form-control-underline">
+                                <option value="" hidden>Branch</option>
+                            </select>
+                            <span asp-validation-for="WareHouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="card card-primary mb-4">
+                        <div class="card-header" style="background-color:#17a2b8;padding: 5px 10px;">
+                            <div class="row">
+                                <div class="col-md-3"style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">Item</h3>
+                                </div>
+                                <div class="col-md-3" style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">Available stock in hand</h3>
+                                </div>
+                                <div class="col-md-3" style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">New Stock In Hand </h3>
+                                </div>
+                                <div class="col-md-3" style="background-color:#17a2b8;">
+                                    <h3 class="card-title font-weight-bold">Adjusted Quantity </h3>
+                                </div>
+
+                               
+                            </div>
+                           
+                        </div>
+                      
+                        <div class="card-body">
+                            <!-- Product Search Section -->
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label for="ProductSearch" class="font-weight-bold"></label>
+                                    <input type="text" id="ProductSearch" class="form-control border shadow-sm" placeholder="Search Item">
+                                    <input type="hidden" id="ProductId" name="ProductId" />
+                                    <div id="productList" class="border mt-1 rounded"></div>
+                                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                                </div>
+
+                                <!-- Available Stock -->
+                              
+
+                                <div class="col-md-3">
+                                    <label for="QuantityDisplay" class="font-weight-bold"></label>
+                                    <input type="number" id="QuantityDisplay" class="form-control quantity-display" readonly>
+                                </div>
+
+
+
+
+
+
+
+
+                                <!-- New Stock in Hand -->
+                                <div class="col-md-3">
+                                    <label for="NewStockInHand" class="font-weight-bold"></label>
+                                    <input type="number" id="NewStockInHand" class="form-control border shadow-sm">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="Quantity" class="font-weight-bold"></label>
+                                    <div class="input-group">
+                                        <input type="number" asp-for="Quantity" id="AdjustedQuantity" class="form-control border shadow-sm" readonly>
+                                        <div class="enhanced-toggle-switch">
+                                            <input type="checkbox" id="enhancedToggleCheckbox" class="enhanced-toggle-checkbox">
+                                            <label for="enhancedToggleCheckbox" class="enhanced-toggle-label">
+                                                <span class="toggle-indicator"></span>
+                                                <span class="toggle-symbol plus-symbol">+</span>
+                                                <span class="toggle-symbol minus-symbol">−</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div> 
+
+                             
+                               
+                            </div>
+
+                          
+                           
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <label asp-for="Note" class="font-weight-bold">Note:</label>
+                                    <input type="text" asp-for="Note" class="form-control line-input" placeholder="Enter note here...">
+                                    <span asp-validation-for="Note" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                   
+
+                   
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-sm mr-2 px-3" id="saveButton">Save</button>
+                            <button type="button" class="btn btn-danger btn-sm px-3" onclick="window.location.href='/Admin/StockAdjustment'">Cancel</button>
+                        </div>
+                    </div> 
+
+                    <input type="hidden" id="redirectToNew" name="redirectToNew" value="false" />
+                </form>
+            </div>
+        </div>
+    </div>
+</section> 
+ 
+
+
+
+@section Scripts 
+{
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+   @*  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  *@
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            // Product Search functionality
+            $('#ProductSearch').on('input', function () {
+                let searchQuery = $(this).val();
+
+                if (searchQuery.length > 0) {
+                    $.ajax({
+                        url: '@Url.Action("Search", "StockAdjustment")',
+                        type: 'GET',
+                        data: { search: searchQuery },
+                        success: function (data) {
+                            let productList = $('#productList');
+                            productList.empty();
+
+                            if (data.length > 0) {
+                                $.each(data, function (i, product) {
+                                    productList.append('<div class="product-item p-2 border-bottom" data-id="' + product.id + '">' + product.itemName + '</div>');
+                                });
+                            } else {
+                                productList.append('<div class="p-2 text-muted">No products found</div>');
+                            }
+                        }
+                    });
+                } else {
+                    $('#productList').empty();
+                }
+            });
+
+            // Select product from the search results and load available stock
+            $(document).on('click', '.product-item', function () {
+                let productId = $(this).data('id');
+                let productName = $(this).text();
+                $('#ProductId').val(productId);
+                $('#ProductSearch').val(productName);
+                $('#productList').empty();
+
+                // Get available stock for the selected product
+                $.ajax({
+                    url: '@Url.Action("GetInStock", "StockAdjustment")',
+                    type: 'GET',
+                    data: { productId: productId },
+                    success: function (inStock) {
+                        $('#QuantityDisplay').val(inStock);
+                        $('#NewStockInHand').val(''); // Clear New Stock in Hand
+                        $('#AdjustedQuantity').val(''); // Clear Adjusted Quantity
+                        $('#adjustedSymbol').text(''); // Clear symbol
+                    }
+                });
+            });
+
+           
+            $(document).ready(function () {
+                // Select elements
+                let adjustedQuantityField = $('#AdjustedQuantity');
+                let toggleCheckbox = $('#enhancedToggleCheckbox');
+                let availableStockField = $('#QuantityDisplay');
+                let newStockField = $('#NewStockInHand');
+
+                // Function to update the adjusted quantity based on stock values
+                function updateAdjustedQuantity() {
+                    let availableStock = parseInt(availableStockField.val()) || 0;
+                    let newStock = parseInt(newStockField.val()) || 0;
+
+                    // Calculate the adjustment difference
+                    let adjustedQuantity = (newStock - availableStock);
+
+                    // Determine if the adjustment is positive or negative
+                    if (newStock > availableStock) {
+                        // Set to plus state
+                        toggleCheckbox.prop('checked', false); // Show plus symbol
+                        adjustedQuantityField.val(adjustedQuantity);
+                    } else if (newStock < availableStock) {
+                        // Set to minus state
+                        toggleCheckbox.prop('checked', true); // Show minus symbol
+                        adjustedQuantityField.val(adjustedQuantity);
+                    } else {
+                        // If they are equal, set quantity to zero and clear toggle
+                        toggleCheckbox.prop('checked', false); // Default to plus
+                        adjustedQuantityField.val(0);
+                    }
+                }
+
+                // Event listeners for real-time update
+                newStockField.on('input', updateAdjustedQuantity);
+                availableStockField.on('input', updateAdjustedQuantity); // In case available stock also changes
+            });
+
+
+
+           
+
+        });
+
+       
+
+         
+    </script>
+
+      <partial name="_ValidationScriptsPartial" /> 
+
+
+    <script>
+        $(document).ready(function () {
+            $('#saveButton').click(function () {
+                $('#redirectToNew').val('false'); // Set the hidden field to false for regular Save
+            });
+
+        });
+    </script>
+
+    <script>
+
+        $('#addReasonButton').click(function () {
+            $('#reasonName').val(''); // Clear the modal form field
+            $('#reasonModalLabel').text('Add Reason');
+            $('#reasonModal').modal('show');
+        });
+
+        $('#saveReasonButton').click(function () {
+            var name = $('#reasonName').val();
+            var url = '/Admin/Reason/Create'; // URL for creating a new Reason
+            var reasonData = { Name: name };
+
+            $.post(url, reasonData, function (response) {
+                if (response.success) {
+                    // Close the modal first
+                    $('#reasonModal').modal('hide');
+
+                    // Show success toastr notification after a short delay
+                    setTimeout(function () {
+                        toastr.success('Reason created successfully');
+                    }, 300); // 300 ms delay for toastr notification
+
+                    // Reload the Reason Dropdown
+                    reloadReasonDropdown(); // Function to reload dropdown after adding
+
+                } else {
+                    // Show error toastr notification
+                    toastr.error(response.message || 'Data insert failed, ensure it is unique');
+                }
+            });
+        });
+
+                // Function to reload Category dropdown
+        function reloadReasonDropdown() {
+            $.get('/Admin/Reason/GetAll', function (data) {
+                var dropdown = $('#ReasonId'); // The dropdown element for reasons
+                dropdown.empty(); // Clear the existing options
+
+                // Populate the dropdown with the ordered list
+                $.each(data.data, function (i, item) {
+                    dropdown.append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
+                });
+
+                // Select the last item (newest reason) in the dropdown
+                if (data.data.length > 0) {
+                    dropdown.val(data.data[data.data.length - 1].id); // Select the last option
+                }
+            });
+        }
+
+    </script>
+
+
+ 
+
+ 
+
+}
+

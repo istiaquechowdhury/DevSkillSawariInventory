@@ -1,0 +1,362 @@
+﻿
+@model List<Inventory.Domain.Entities.MeasurementUnit>
+
+@{
+    ViewData["Title"] = "Measurement Unit List";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    @* <style>
+        table#measurementTable thead th {
+            background-color: #17a2b8 !important;
+            color: white !important;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            border: none;
+        }
+
+            /* Sorting icons */
+            table#measurementTable thead th.sorting:after,
+            table#measurementTable thead th.sorting_asc:after,
+            table#measurementTable thead th.sorting_desc:after {
+                display: none !important;
+            }
+
+            table#measurementTable thead th.sorting_asc::before {
+                content: '▲';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white !important;
+                font-size: 14px;
+            }
+
+            table#measurementTable thead th.sorting_desc::before {
+                content: '▼';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white !important;
+                font-size: 14px;
+            }
+    </style> *@
+    <style>
+        table#measurementTable thead th {
+            background-color: #17a2b8 !important;
+            color: white !important;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            border: none;
+        }
+
+            /* Hide default sorting icons */
+            table#measurementTable thead th.sorting:after,
+            table#measurementTable thead th.sorting_asc:after,
+            table#measurementTable thead th.sorting_desc:after {
+                display: none !important;
+            }
+
+            /* Default pyramid symbol (white) for unsorted columns */
+            table#measurementTable thead th.sorting::before {
+                content: '▲';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white !important;
+                font-size: 14px;
+            }
+
+            /* Pyramid symbol for ascending order */
+            table#measurementTable thead th.sorting_asc::before {
+                content: '▲';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white !important;
+                font-size: 14px;
+            }
+
+            /* Pyramid symbol for descending order */
+            table#measurementTable thead th.sorting_desc::before {
+                content: '▼';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white !important;
+                font-size: 14px;
+            }
+
+        #addMeasurementButton {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 13px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            #addMeasurementButton:hover {
+                background-color: #138f9e; /* Slightly darker shade on hover */
+                color: white;
+            }
+    </style>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Measurement Unit List</h3>
+        <button class="btn btn-primary float-right" id="addMeasurementButton">
+            <i class="fas fa-plus"></i> Add
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped" id="measurementTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_MeasurementModal" />
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#measurementTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: {
+                    url: "/Admin/Measurement/GetMeasurementData",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify({
+                            Start: d.start,
+                            Length: d.length,
+                            Search: {
+                                Value: d.search.value,
+                                Regex: false
+                            },
+                            Order: d.order.map(function (order) {
+                                return {
+                                    Column: order.column,
+                                    Dir: order.dir
+                                };
+                            })
+                        });
+                    }
+                },
+                columns: [
+                    {
+                        data: function (row) { return row[0]; },
+                        name: 'name'
+                    },
+                    {
+                        data: function (row) { return row[1]; },
+                        name: 'symbol'
+                    },
+                    {
+                        data: function (row) { return row[2]; },
+                        orderable: false,
+                        render: function (data) {
+                            return `
+                                        <button class="btn btn-info btn-sm editMeasurementButton" data-id="${data}">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm deleteMeasurementButton" data-id="${data}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>`;
+                        }
+                    }
+                ],
+                lengthChange: true,
+                autoWidth: false,
+                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            });
+
+            // $('#addMeasurementButton').click(function () {
+            //     $('#measurementId').val('');
+            //     $('#measurementName').val('');
+            //     $('#measurementSymbol').val('');
+            //     $('#measurementModalLabel').text('Add Measurement Unit');
+            //     $('#measurementModal').modal('show');
+            // });
+
+            // $('#measurementTable').on('click', '.editMeasurementButton', function () {
+            //     var id = $(this).data('id');
+            //     $.get('/Admin/Measurement/GetMeasurementById', { id: id }, function (data) {
+            //         $('#measurementId').val(data.id);
+            //         $('#measurementName').val(data.name);
+            //         $('#measurementSymbol').val(data.symbol);
+            //         $('#measurementModalLabel').text('Edit Measurement Unit');
+            //         $('#measurementModal').modal('show');
+            //     });
+            // });
+
+            // $('#saveMeasurementButton').click(function () {
+            //     var id = $('#measurementId').val();
+            //     var name = $('#measurementName').val();
+            //     var symbol = $('#measurementSymbol').val();
+            //     var url = id ? '/Admin/Measurement/Update' : '/Admin/Measurement/Create';
+            //     var measurementData = { Id: id, Name: name, Symbol: symbol };
+
+            //     $.post(url, measurementData, function (response) {
+            //         if (response.success) {
+            //             table.ajax.reload();
+            //             $('#measurementModal').modal('hide');
+            //             setTimeout(function () {
+            //                 toastr.success('Category created/updated successfully');
+            //             }, 300);
+            //         } else {
+            //             alert(response.message);
+            //         }
+            //     });
+            // });
+
+            // $('#measurementTable').on('click', '.deleteMeasurementButton', function () {
+            //     var id = $(this).data('id');
+            //     $('#deleteMeasurementModal').modal('show');
+
+            //     $('#confirmDeleteButton').off('click').on('click', function () {
+            //         $.post('/Admin/Measurement/Delete', { id: id }, function (response) {
+            //             if (response.success) {
+            //                 table.ajax.reload();
+            //                 $('#deleteMeasurementModal').modal('hide');
+            //                 setTimeout(function () {
+            //                     toastr.success('Category deleted successfully');
+            //                 }, 300);
+            //             } else {
+            //                 alert(response.message);
+            //             }
+            //         }).fail(function () {
+            //             alert('An error occurred while trying to delete the measurement unit.');
+            //         });
+            //     });
+            // });
+
+
+
+            $('#addMeasurementButton').click(function () {
+                $.get('/Admin/Measurement/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        $('#measurementId').val('');
+                        $('#measurementName').val('');
+                        $('#measurementSymbol').val('');
+                        $('#measurementModalLabel').text('Add Measurement Unit');
+                        $('#measurementModal').modal('show');
+                    } else {
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+            // Edit Measurement
+            $('#measurementTable').on('click', '.editMeasurementButton', function () {
+                var id = $(this).data('id');
+                $.get('/Admin/Measurement/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        $.get('/Admin/Measurement/GetMeasurementById', { id: id }, function (data) {
+                            $('#measurementId').val(data.id);
+                            $('#measurementName').val(data.name);
+                            $('#measurementSymbol').val(data.symbol);
+                            $('#measurementModalLabel').text('Edit Measurement Unit');
+                            $('#measurementModal').modal('show');
+                        });
+                    } else {
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+            // Save Measurement
+            $('#saveMeasurementButton').click(function () {
+                var id = $('#measurementId').val();
+                var name = $('#measurementName').val();
+                var symbol = $('#measurementSymbol').val();
+                var url = id ? '/Admin/Measurement/Update' : '/Admin/Measurement/Create';
+                var measurementData = { Id: id, Name: name, Symbol: symbol };
+
+                $.post(url, measurementData, function (response) {
+                    if (response.success) {
+                        table.ajax.reload();
+                        $('#measurementModal').modal('hide');
+                        setTimeout(function () {
+                            toastr.success('Measurement unit created/updated successfully');
+                        }, 300);
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            // Delete Measurement
+            $('#measurementTable').on('click', '.deleteMeasurementButton', function () {
+                var id = $(this).data('id');
+                $.get('/Admin/Measurement/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        $('#deleteMeasurementModal').modal('show');
+
+                        // Confirm Delete
+                        $('#confirmDeleteButton').off('click').on('click', function () {
+                            $.post('/Admin/Measurement/Delete', { id: id }, function (response) {
+                                if (response.success) {
+                                    table.ajax.reload();
+                                    $('#deleteMeasurementModal').modal('hide');
+                                    setTimeout(function () {
+                                        toastr.success('Measurement unit deleted successfully');
+                                    }, 300);
+                                } else {
+                                    alert(response.message);
+                                }
+                            }).fail(function () {
+                                alert('An error occurred while trying to delete the measurement unit.');
+                            });
+                        });
+                    } else {
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+        });
+    </script>
+}

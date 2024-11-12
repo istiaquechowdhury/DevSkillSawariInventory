@@ -1,0 +1,253 @@
+﻿@model List<Inventory.Domain.Entities.WareHouse>
+
+@{
+    ViewData["Title"] = "Warehouse List";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <style>
+        /* Custom styles for the header */
+        #warehouseTable thead th,
+        #warehouseTable tfoot th {
+            background-color: #17a2b8; /* Set background color */
+            color: white; /* Set text color */
+            border: none; /* Remove border */
+            text-align: center; /* Center align text */
+            padding: 8px 12px; /* Adjust padding for smaller header (top-bottom, left-right) */
+            font-size: 14px; /* Adjust font size for smaller header */
+            margin-left: -5px; /* Shift header slightly to the left */
+        }
+
+            #warehouseTable thead th.sorting:after,
+            #warehouseTable thead th.sorting_asc:after,
+            #warehouseTable thead th.sorting_desc:after {
+                display: none !important; /* Hide default sorting arrows */
+            }
+
+            #warehouseTable thead th.sorting_asc::before {
+                content: '\25B2'; /* White upward pyramid symbol (▲) */
+                position: absolute;
+                right: 10px; /* Positioning */
+                top: 50%;
+                transform: translateY(-50%);
+                color: white; /* Pyramid color */
+                font-size: 14px; /* Adjust size as needed */
+            }
+
+            #warehouseTable thead th.sorting_desc::before {
+                content: '\25BC'; /* White downward pyramid symbol (▼) */
+                position: absolute;
+                right: 10px; /* Positioning */
+                top: 50%;
+                transform: translateY(-50%);
+                color: white; /* Pyramid color */
+                font-size: 14px; /* Adjust size as needed */
+            }
+
+        #addWarehouseButton {
+            background-color: #17a2b8; /* Match header color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            padding: 0.5rem 1rem; /* Adjust padding */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor */
+        }
+
+            /* Add hover effect */
+            #addWarehouseButton:hover {
+                background-color: #138496; /* Darken on hover */
+            }
+    </style>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Warehouses</h3>
+        <button class="btn btn-primary float-right" id="addWarehouseButton">
+            <i class="fas fa-plus"></i> Add 
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped" id="warehouseTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+          
+        </table>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_WarehouseModal" />
+    <!-- DataTables Scripts -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Initialize DataTable
+            var table = $('#warehouseTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: {
+                    url: "/Admin/Warehouse/GetWarehouseData", // URL to fetch warehouse data
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify({
+                            Start: d.start,        // Start index
+                            Length: d.length,      // Page size (number of records)
+                            Search: {              // Search object
+                                Value: d.search.value,
+                                Regex: false        // Adjust this if needed
+                            },
+                            Order: d.order.map(function (order) {  // Sorting info
+                                return {
+                                    Column: order.column, // Column index
+                                    Dir: order.dir        // Sorting direction
+                                };
+                            })
+                        });
+                    }
+                },
+                columns: [
+                    {
+                        data: function (row) {
+                            return row[0]; // Access 'name' from the server response
+                        },
+                        name: 'name'
+                    },
+                    {
+                        data: function (row) {
+                            return row[1]; // Access 'id' from the server response
+                        },
+                        orderable: false,
+                        render: function (data) {
+                            return `
+                                        <button class="btn btn-info btn-sm editWarehouseButton" data-id="${data}">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>`;
+                                      
+                        }
+                    }
+                ],
+                lengthChange: true,
+                autoWidth: false,
+                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            });
+
+            // // Add Warehouse Button
+            // $('#addWarehouseButton').click(function () {
+            //     $('#warehouseId').val(''); // Clear the modal form fields
+            //     $('#warehouseName').val('');
+            //     $('#warehouseModalLabel').text('Add Warehouse');
+            //     $('#warehouseModal').modal('show');
+            // });
+
+            // // Edit Warehouse Button
+            // $('#warehouseTable').on('click', '.editWarehouseButton', function () {
+            //     var id = $(this).data('id');
+            //     $.get('/Admin/Warehouse/GetWarehouseById', { id: id }, function (data) {
+            //         $('#warehouseId').val(data.id);
+            //         $('#warehouseName').val(data.name);
+            //         $('#warehouseModalLabel').text('Edit Warehouse');
+            //         $('#warehouseModal').modal('show');
+            //     });
+            // });
+
+            // // Save Warehouse Button (Create or Update)
+            // $('#saveWarehouseButton').click(function () {
+            //     var id = $('#warehouseId').val();
+            //     var name = $('#warehouseName').val();
+            //     var url = id ? '/Admin/Warehouse/Update' : '/Admin/Warehouse/Create'; // Choose URL for create/update
+            //     var warehouseData = { Id: id, Name: name };
+
+            //     $.post(url, warehouseData, function (response) {
+            //         if (response.success) {
+            //             table.ajax.reload(); // Reload the DataTable on success
+            //             $('#warehouseModal').modal('hide');
+            //         } else {
+            //             alert(response.message); // Show error message if failed
+            //         }
+            //     });
+            // });
+
+            $('#addWarehouseButton').click(function () {
+                $.get('/Admin/Warehouse/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        $('#warehouseId').val(''); // Clear the modal form fields
+                        $('#warehouseName').val('');
+                        $('#warehouseModalLabel').text('Add Warehouse');
+                        $('#warehouseModal').modal('show');
+                    } else {
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+            // Edit Warehouse
+            $('#warehouseTable').on('click', '.editWarehouseButton', function () {
+                var id = $(this).data('id');
+                $.get('/Admin/Warehouse/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        $.get('/Admin/Warehouse/GetWarehouseById', { id: id }, function (data) {
+                            $('#warehouseId').val(data.id);
+                            $('#warehouseName').val(data.name);
+                            $('#warehouseModalLabel').text('Edit Warehouse');
+                            $('#warehouseModal').modal('show');
+                        });
+                    } else {
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+            // Save Warehouse (Create or Update)
+            $('#saveWarehouseButton').click(function () {
+                var id = $('#warehouseId').val();
+                var name = $('#warehouseName').val();
+                var url = id ? '/Admin/Warehouse/Update' : '/Admin/Warehouse/Create'; // Choose URL for create/update
+                var warehouseData = { Id: id, Name: name };
+
+                $.post(url, warehouseData, function (response) {
+                    if (response.success) {
+                        table.ajax.reload(); // Reload the DataTable on success
+                        $('#warehouseModal').modal('hide');
+                        setTimeout(function () {
+                            toastr.success('Warehouse created/updated successfully');
+                        }, 300);
+                    } else {
+                        alert(response.message); // Show error message if failed
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while saving the warehouse.');
+                });
+            });
+        });
+    </script>
+}

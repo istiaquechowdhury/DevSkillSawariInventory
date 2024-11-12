@@ -1,0 +1,326 @@
+﻿
+@model List<Inventory.Domain.Entities.Category>
+
+@{
+    ViewData["Title"] = "Category List";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <style>
+        /* Custom style for table header */
+        #categoryTable thead th {
+            background-color: #17a2b8; /* Teal color */
+            color: white; /* Text color white */
+            border: none; /* Remove borders between header cells */
+            position: relative; /* Required for arrow positioning */
+        }
+
+        /* Hide default DataTables sorting icons */
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_desc:after {
+            display: none !important; /* Force hide default sorting icons */
+        }
+
+        /* Custom filled pyramid-like sorting arrows */
+        table.dataTable thead th.sorting:before,
+        table.dataTable thead th.sorting_asc:before,
+        table.dataTable thead th.sorting_desc:before {
+            content: "\25B2"; /* Filled pyramid up */
+            color: white; /* White arrow color */
+            font-size: 12px;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%); /* Vertically center the arrows */
+        }
+
+        table.dataTable thead th.sorting_asc:before {
+            content: "\25B2"; /* Filled pyramid up for ascending */
+        }
+
+        table.dataTable thead th.sorting_desc:before {
+            content: "\25BC"; /* Filled pyramid down for descending */
+        }
+
+        /* Ensure the header row takes up the entire width with no gaps */
+        #categoryTable thead tr {
+            padding: 0;
+            margin: 0;
+        }
+
+        #categoryTable {
+            border-collapse: collapse; /* Ensures no gaps between cells */
+        }
+
+        #addCategoryButton {
+            background-color: #17a2b8; /* Same teal color */
+            color: white; /* White text color */
+            border-radius:5px; /* Remove border */
+        }
+
+            #addCategoryButton:hover {
+                background-color: #138f99; /* Slightly darker teal on hover */
+            }
+    </style>
+} 
+
+
+
+
+
+
+<div class="card">
+
+    <div class="card-header">
+        <h3 class="card-title">Item Category List</h3>
+     
+        <button class="btn btn-info text-white float-right" id="addCategoryButton">
+            <i class="fas fa-plus"></i> Add
+        </button>
+    </div>
+    <div class="card-body">
+     
+        <table class="table table-bordered table-striped" id="categoryTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th style="text-align: right;">Actions</th> <!-- Move Actions to the end -->
+                </tr>
+            </thead>
+           
+        </table>
+
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_CategoryModal" />
+    <!-- DataTables Scripts -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- Custom Script for handling DataTable and CRUD operations -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#categoryTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: {
+                    url: "/Admin/Category/GetCategoryData", // URL to fetch category data
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify({
+                            Start: d.start,        // Start index
+                            Length: d.length,      // Page size (number of records)
+                            Search: {              // Search object
+                                Value: d.search.value,
+                                Regex: false        // Adjust this if needed
+                            },
+                            Order: d.order.map(function (order) {  // Sorting info
+                                return {
+                                    Column: order.column, // Column index
+                                    Dir: order.dir        // Sorting direction
+                                };
+                            })
+                        });
+                    }
+                },
+                columns: [
+                    {
+                        data: function (row) {
+                            return row[0]; // Access 'name' from the server response
+                        },
+                        name: 'name'
+                    },
+                    {
+                        data: function (row) {
+                            return row[1]; // Access 'id' from the server response
+                        },
+                        orderable: false,
+                        render: function (data) {
+                            return `
+                            <div style="text-align: right;">
+                                <button class="btn btn-info btn-sm editCategoryButton" data-id="${data}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm deleteCategoryButton" data-id="${data}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>`;
+                        }
+                    }
+                ],
+                lengthChange: true,
+                autoWidth: false,
+                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            });
+
+          
+
+            // Add Category Button
+            // $('#addCategoryButton').click(function () {
+            //     $('#categoryId').val(''); // Clear the modal form fields
+            //     $('#categoryName').val('');
+            //     $('#categoryModalLabel').text('Add Category');
+            //     $('#categoryModal').modal('show');
+            // });
+
+            $('#addCategoryButton').click(function () {
+                // Make an AJAX request to check if the user is an admin
+                $.get('/Admin/Category/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        // If the user is an admin, show the modal
+                        $('#categoryId').val(''); // Clear the modal form fields
+                        $('#categoryName').val('');
+                        $('#categoryModalLabel').text('Add Category');
+                        $('#categoryModal').modal('show');
+                    } else {
+                        // If the user is not an admin, show the Access Denied message
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    // Handle any errors from the server
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+
+            // Edit Category Button
+            // $('#categoryTable').on('click', '.editCategoryButton', function () {
+            //     var id = $(this).data('id');
+            //     $.get('/Admin/Category/GetCategoryById', { id: id }, function (data) {
+            //         $('#categoryId').val(data.id);
+            //         $('#categoryName').val(data.name);
+            //         $('#categoryModalLabel').text('Edit Category');
+            //         $('#categoryModal').modal('show');
+            //     });
+            // });
+            $('#categoryTable').on('click', '.editCategoryButton', function () {
+                var id = $(this).data('id');
+
+                // Make an AJAX request to check if the user is an admin
+                $.get('/Admin/Category/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        // If the user is an admin, fetch the category data
+                        $.get('/Admin/Category/GetCategoryById', { id: id }, function (data) {
+                            $('#categoryId').val(data.id);
+                            $('#categoryName').val(data.name);
+                            $('#categoryModalLabel').text('Edit Category');
+                            $('#categoryModal').modal('show');
+                        });
+                    } else {
+                        // If the user is not an admin, show the Access Denied message
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    // Handle any errors from the server
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+
+            // Save Category Button (Create or Update)
+            $('#saveCategoryButton').click(function () {
+                var id = $('#categoryId').val();
+                var name = $('#categoryName').val();
+                var url = id ? '/Admin/Category/Update' : '/Admin/Category/Create'; // Choose URL for create/update
+                var categoryData = { Id: id, Name: name };
+
+                $.post(url, categoryData, function (response) {
+                    if (response.success) {
+                        table.ajax.reload(); // Reload the DataTable on success
+                        $('#categoryModal').modal('hide');
+                        setTimeout(function () {
+                            toastr.success('Category created/updated successfully');
+                        }, 300);
+                    } else {
+                        alert(response.message); // Show error message if failed
+                    }
+                });
+            });
+           
+            // Delete Category Button
+            
+            // $('#categoryTable').on('click', '.deleteCategoryButton', function () {
+            //     var id = $(this).data('id');
+            //     $('#deleteCategoryModal').modal('show');
+
+            //     // Confirm Delete
+            //     $('#confirmDeleteButton').off('click').on('click', function () {
+            //         $.post('/Admin/Category/Delete', { id: id }, function (response) {
+            //             if (response.success) {
+            //                 table.ajax.reload(); // Reload the DataTable on success
+            //                 $('#deleteCategoryModal').modal('hide');
+            //                 setTimeout(function () {
+            //                     toastr.success('Category deleted successfully');
+            //                 }, 300);
+            //             } else {
+            //                 alert(response.message); // Show error message if failed
+            //             }
+            //         }).fail(function () {
+            //             alert('An error occurred while trying to delete the category.');
+            //         });
+            //     });
+            // });
+            $('#categoryTable').on('click', '.deleteCategoryButton', function () {
+                var id = $(this).data('id');
+
+                // Check if the user is an admin before showing the delete modal
+                $.get('/Admin/Category/IsUserAdmin', function (isAdmin) {
+                    if (isAdmin) {
+                        $('#deleteCategoryModal').modal('show');
+
+                        // Confirm Delete
+                        $('#confirmDeleteButton').off('click').on('click', function () {
+                            $.post('/Admin/Category/Delete', { id: id }, function (response) {
+                                if (response.success) {
+                                    table.ajax.reload(); // Reload the DataTable on success
+                                    $('#deleteCategoryModal').modal('hide');
+                                    setTimeout(function () {
+                                        toastr.success('Category deleted successfully');
+                                    }, 300);
+                                } else {
+                                    alert(response.message); // Show error message if failed
+                                }
+                            }).fail(function () {
+                                alert('An error occurred while trying to delete the category.');
+                            });
+                        });
+                    } else {
+                        // If the user is not an admin, show the Access Denied message
+                        toastr.error('Access Denied: You do not have permission to perform this action.');
+                    }
+                }).fail(function () {
+                    toastr.error('An error occurred while checking user permissions.');
+                });
+            });
+
+
+        });
+        
+
+    </script> 
+
+
+
+}
