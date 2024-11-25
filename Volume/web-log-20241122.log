@@ -1,0 +1,53 @@
+2024-11-22 10:21:18.084 +00:00 [INF] application is starting
+2024-11-22 10:21:18.410 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-22 10:21:18.999 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-22 10:21:19.040 +00:00 [WRN] No XML encryptor configured. Key {0f70810d-ef08-4390-98ad-c02bed672c8c} may be persisted to storage in unencrypted form.
+2024-11-22 10:21:19.049 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-22 10:21:39.173 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-22 10:22:55.125 +00:00 [INF] from index
+2024-11-22 10:23:11.384 +00:00 [INF] application is starting
+2024-11-22 10:23:11.547 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-22 10:23:11.843 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-22 10:23:11.896 +00:00 [WRN] No XML encryptor configured. Key {0793fc73-ada0-4286-81cf-ca12cb8167cb} may be persisted to storage in unencrypted form.
+2024-11-22 10:23:11.904 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-22 10:23:25.622 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-22 10:29:45.584 +00:00 [INF] from index
+2024-11-22 10:30:09.203 +00:00 [INF] from index
+2024-11-22 10:40:49.680 +00:00 [INF] application is starting
+2024-11-22 10:40:49.889 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-22 10:40:50.271 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-22 10:40:50.313 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-22 10:41:04.011 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-22 10:41:52.832 +00:00 [INF] application is starting
+2024-11-22 10:41:53.005 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-22 10:41:53.296 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-22 10:41:53.337 +00:00 [WRN] No XML encryptor configured. Key {367fae1d-809e-464c-98eb-3a6e2137d65c} may be persisted to storage in unencrypted form.
+2024-11-22 10:41:53.353 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-22 10:41:55.007 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-22 10:41:55.208 +00:00 [ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {0793fc73-ada0-4286-81cf-ca12cb8167cb} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+2024-11-22 11:01:09.872 +00:00 [INF] from index
+2024-11-22 11:01:21.895 +00:00 [INF] application is starting
+2024-11-22 11:01:22.071 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-22 11:01:22.368 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-22 11:01:22.411 +00:00 [WRN] No XML encryptor configured. Key {6927f1d6-8139-49cd-8308-3d9d6d45df70} may be persisted to storage in unencrypted form.
+2024-11-22 11:01:22.417 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-22 11:02:23.408 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-22 11:02:51.966 +00:00 [ERR] Product creation failed
+System.InvalidOperationException: ItemName should be unique.
+   at Inventory.Application.Services.ProductManagementService.CreateProduct(Product Products) in /src/Inventory.Application/Services/ProductManagementService.cs:line 37
+   at DevSkill.Inventory.Web.Areas.Admin.Controllers.ProductController.Create(ProductModel productModel, Boolean redirectToNew) in /src/DevSkill.Inventory.Web/Areas/Admin/Controllers/ProductController.cs:line 193
+2024-11-22 11:04:40.275 +00:00 [INF] application is starting
+2024-11-22 11:04:40.439 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-22 11:04:41.061 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-22 11:04:41.141 +00:00 [WRN] No XML encryptor configured. Key {d478fd25-c8d4-4478-a7cb-c6af213cce43} may be persisted to storage in unencrypted form.
+2024-11-22 11:04:41.151 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-22 11:04:55.009 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-22 11:18:01.135 +00:00 [INF] from index

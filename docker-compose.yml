@@ -1,0 +1,19 @@
+version: "3"
+services:
+    web:
+        build: 
+            context: .
+            dockerfile: DevSkill.Inventory.Web/Dockerfile
+        image: inventory-image
+        env_file: 
+            - web.env
+        volumes:
+            -  E:/Aspnet-B10/Aspnet-B10/Volume:/app/Logs
+        ports:
+            - "8000:80"
+        entrypoint: ["dotnet", "DevSkill.Inventory.Web.dll"]
+        
+volumes:
+    DevSkill.Inventory-data:
+     external: true
+

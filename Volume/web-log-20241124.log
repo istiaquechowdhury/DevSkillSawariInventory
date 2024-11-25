@@ -1,0 +1,7 @@
+2024-11-24 07:07:45.773 +00:00 [INF] application is starting
+2024-11-24 07:07:46.017 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-24 07:07:46.732 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-24 07:07:46.798 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-24 07:07:52.127 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-24 07:07:52.177 +00:00 [INF] from index
+2024-11-24 07:08:28.163 +00:00 [INF] from index

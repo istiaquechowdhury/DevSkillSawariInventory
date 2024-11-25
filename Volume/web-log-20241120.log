@@ -1,0 +1,74 @@
+2024-11-20 08:43:57.077 +00:00 [INF] application is starting
+2024-11-20 08:43:57.429 +00:00 [INF] Server= 192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-20 08:43:57.952 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-20 08:43:58.077 +00:00 [WRN] No XML encryptor configured. Key {3ad49fbd-371e-4a61-b279-bc58ec4cd134} may be persisted to storage in unencrypted form.
+2024-11-20 08:43:59.136 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-20 08:44:03.949 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-20 08:44:04.026 +00:00 [INF] from index
+2024-11-20 08:52:58.394 +00:00 [INF] application is starting
+2024-11-20 08:52:58.673 +00:00 [INF] Server= 192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-20 08:52:59.208 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-20 08:52:59.250 +00:00 [WRN] No XML encryptor configured. Key {e9edaf6f-a27b-4d5e-b257-9759bb147588} may be persisted to storage in unencrypted form.
+2024-11-20 08:52:59.262 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-20 08:53:14.953 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-20 08:53:15.012 +00:00 [INF] from index
+2024-11-20 08:53:17.309 +00:00 [ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {3ad49fbd-371e-4a61-b279-bc58ec4cd134} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+2024-11-20 12:57:59.901 +00:00 [INF] application is starting
+2024-11-20 12:58:00.284 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-20 12:58:00.957 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-20 12:58:00.988 +00:00 [WRN] No XML encryptor configured. Key {b754f14e-f7e3-4d16-91d7-70de66e1eddc} may be persisted to storage in unencrypted form.
+2024-11-20 12:58:00.995 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-20 13:01:59.750 +00:00 [INF] application is starting
+2024-11-20 13:02:00.117 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-20 13:02:00.610 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-20 13:02:00.652 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-20 13:02:25.243 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-20 13:02:25.318 +00:00 [INF] from index
+2024-11-20 13:02:29.765 +00:00 [ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {e9edaf6f-a27b-4d5e-b257-9759bb147588} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+2024-11-20 13:05:08.169 +00:00 [INF] application is starting
+2024-11-20 13:05:08.513 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-20 13:05:09.065 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-20 13:05:09.099 +00:00 [WRN] No XML encryptor configured. Key {2bea5d7a-1183-467e-8022-8c5c5a0feb0a} may be persisted to storage in unencrypted form.
+2024-11-20 13:05:09.106 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-20 13:05:21.012 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-20 13:05:21.210 +00:00 [ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {b754f14e-f7e3-4d16-91d7-70de66e1eddc} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
+2024-11-20 13:17:26.021 +00:00 [INF] application is starting
+2024-11-20 13:17:26.260 +00:00 [INF] Server=192.168.0.101,49173\SQLEXPRESS;Database=Inventory;User Id=inventory;Password=123456;Trust Server Certificate=True
+2024-11-20 13:17:26.996 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2024-11-20 13:17:27.083 +00:00 [WRN] No XML encryptor configured. Key {7d507083-b61b-4588-b477-a40f93b15315} may be persisted to storage in unencrypted form.
+2024-11-20 13:17:27.091 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://*:80'.
+2024-11-20 13:17:27.388 +00:00 [WRN] Failed to determine the https port for redirect.
+2024-11-20 13:17:27.451 +00:00 [INF] from index
+2024-11-20 13:17:31.204 +00:00 [ERR] An exception was thrown while deserializing the token.
+Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException: The antiforgery token could not be decrypted.
+ ---> System.Security.Cryptography.CryptographicException: The key {2bea5d7a-1183-467e-8022-8c5c5a0feb0a} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenSerializer.Deserialize(String serializedToken)
+   at Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetCookieTokenDoesNotThrow(HttpContext httpContext)
