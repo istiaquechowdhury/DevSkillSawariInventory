@@ -1,5 +1,10 @@
 # Sawari - Inventory Management System
 
+live link: http://sawariinventory.runasp.net/
+Login Credentials: 
+Email:admin@gmail.com
+Password:Admin123
+
 Developed a robust inventory management system for efficient stock management and adjustments.
 
 ## Key Features
