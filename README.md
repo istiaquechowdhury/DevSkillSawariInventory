@@ -24,7 +24,7 @@ Developed a robust inventory management system for efficient stock management an
 - **jQuery**
 - **AJAX**
 - **Docker**
-- AWS S3
+- **AWS S3**
 
 ## Architecture Used
 - **Clean Architecture**
