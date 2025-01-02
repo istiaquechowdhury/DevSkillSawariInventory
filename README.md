@@ -5,7 +5,7 @@ Login Credentials:
 Email:admin@gmail.com
 Password:Admin123
 
-Developed a robust inventory management system for efficient stock management and adjustments.
+Developed a robust inventory management system for efficient stock management and adjustments. 
 
 ## Key Features
 - Built with **ASP.NET Core MVC 8**, allowing administrators to manage stock items, transfers, and adjustments.
@@ -24,6 +24,7 @@ Developed a robust inventory management system for efficient stock management an
 - **jQuery**
 - **AJAX**
 - **Docker**
+- AWS S3
 
 ## Architecture Used
 - **Clean Architecture**
